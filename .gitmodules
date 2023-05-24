@@ -1,6 +1,3 @@
 [submodule "Vendor/GLFW"]
 	path = Vendor/GLFW
 	url = https://github.com/glfw/glfw.git
-[submodule "build/out/Vendor/GLFW"]
-	path = build/out/Vendor/GLFW
-	url = https://github.com/glfw/glfw.git
