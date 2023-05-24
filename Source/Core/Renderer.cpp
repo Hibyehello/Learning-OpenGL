@@ -5,11 +5,6 @@
 #include <sstream>
 
 Renderer::Renderer() {
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-	    std::cerr << "Failed to initialize GLAD" << std::endl;
-	    abort();
-	}
-
 	std::cout << glGetString(GL_VERSION) << std::endl;	
 
 	float positions[6] = {
@@ -17,9 +12,12 @@ Renderer::Renderer() {
 		 0.0f,  0.5f,
 		 0.5f, -0.5f
 	};
+
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
 	
-	glGenBuffers(1, &m_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
+	glGenBuffers(1, &m_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
@@ -44,8 +42,8 @@ Renderer::Renderer() {
 }
 
 void Renderer::onUpdate() {
-	std::cout << "Update" << std::endl;
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+
 }
 
 uint32_t Renderer::CreateShader(const std::string& vertex, const std::string& fragment) {
@@ -61,6 +59,8 @@ uint32_t Renderer::CreateShader(const std::string& vertex, const std::string& fr
 
 	glDeleteShader(vs);
 	glDeleteShader(fs);
+
+	glUseProgram(program);
 
 	return program;
 }

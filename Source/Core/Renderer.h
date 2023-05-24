@@ -5,7 +5,8 @@
 
 class Renderer {
 private:
-	uint32_t m_buffer;
+	uint32_t m_vbo;
+	uint32_t m_vao;
 public:
 	Renderer();
 	~Renderer() = default;
