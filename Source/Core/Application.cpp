@@ -29,11 +29,35 @@ Application::Application(uint32_t width, uint32_t height, const char* title) {
 
 int Application::Run() {
 
-	while (!glfwWindowShouldClose(m_window)) {
-        /* Render here */
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+	float positions[] = {
+		-0.5f, -0.5f,
+		 0.5f, -0.5f,
+		 0.5f,  0.5f,
+		-0.5f,  0.5f
+	};
 
-        m_renderer->onUpdate();
+	uint32_t indices[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	VertexArray vao;
+	VertexBuffer vbo(positions, 4 * 2 * sizeof(float));
+	VertexLayout vl;
+	
+	vl.push<float>(2);
+	vao.AddBuffer(vbo, vl);
+
+	IndexBuffer ibo(indices, 6);
+
+	Shader shader("Shaders/vertex.glsl", "Shaders/fragment.glsl");
+	shader.Bind();
+	shader.SetUniform4f("u_color", 0.4f, 0.5f, 0.7f, 1.0f);
+
+	while (!glfwWindowShouldClose(m_window)) {
+
+		m_renderer->Clear();
+        m_renderer->onUpdate(vao, ibo, shader);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(m_window);
@@ -41,8 +65,7 @@ int Application::Run() {
         /* Poll for and process events */
         glfwPollEvents();
     }
-
-	m_renderer->terminate();
+    
     glfwTerminate();
     return 0;
 }

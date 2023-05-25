@@ -3,6 +3,7 @@ add_executable(Core
 	Buffers.cpp
 	Error.cpp
 	Renderer.cpp
+	Shader.cpp
 	VertexArray.cpp
 )
 

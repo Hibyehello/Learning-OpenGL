@@ -7,6 +7,7 @@
 
 #include "Buffers.h"
 #include "Error.h"
+#include "Shader.h"
 #include "VertexArray.h"
 
 class Renderer {
@@ -15,14 +16,11 @@ private:
 	IndexBuffer*  m_ibo;
 	VertexArray*  m_vao;
 	VertexLayout* m_vl;
-	uint32_t m_shader;
+	Shader* 	  m_shader;
 public:
 	Renderer();
 	~Renderer() = default;
 
-	void onUpdate();
-	void terminate();
-
-	static uint32_t CreateShader(const std::string& vertex, const std::string& fragment);
-	static uint32_t CompileShader(uint32_t type, const std::string& src);
+	void onUpdate(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+	void Clear() const;
 };
