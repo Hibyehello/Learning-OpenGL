@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <string>
 #include <unordered_map>
 
@@ -8,7 +9,7 @@ private:
 	std::string m_filepath_v;
 	std::string m_filepath_f;
 	uint32_t m_renderer_id;
-	std::unordered_map<std::string, uint32_t> m_location_cache;
+	std::unordered_map<std::string, int> m_location_cache;
 public:
 	Shader(const std::string& vfile, const std::string& ffile);
 	~Shader();
@@ -17,10 +18,13 @@ public:
 	void UnBind() const;
 
 	// Set Uniforms
+	void SetUniform1i(const std::string& name, int value);
+	void SetUniform1f(const std::string& name, float value);
 	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void SetUniformMat4f(const std::string& name, glm::mat4 matrix);
 
 private:
-	uint32_t GetUniformLocation(const std::string& name);
+	int GetUniformLocation(const std::string& name);
 	uint32_t CompileShader(uint32_t type, std::string source);
 	uint32_t CreateShader(const std::string& vertex, const std::string& fragment);
 };

@@ -1,6 +1,15 @@
 #include "Application.h"
 
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Buffers.h"
+#include "Error.h"
+#include "Shader.h"
+#include "Texture.h"
+#include "VertexArray.h"
+#include "VertexLayout.h"
 
 Application::Application(uint32_t width, uint32_t height, const char* title) {
 	this->m_width = width;
@@ -30,10 +39,10 @@ Application::Application(uint32_t width, uint32_t height, const char* title) {
 int Application::Run() {
 
 	float positions[] = {
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.5f,  0.5f,
-		-0.5f,  0.5f
+		 100.0f,  100.0f, 0.0f, 0.0f, // 0
+		 200.0f,  100.0f, 1.0f, 0.0f, // 1
+		 200.0f,  200.0f, 1.0f, 1.0f, // 2
+		 100.0f,  200.0f, 0.0f, 1.0f  // 3
 	};
 
 	uint32_t indices[] = {
@@ -41,18 +50,34 @@ int Application::Run() {
 		2, 3, 0
 	};
 
+	GLCall(glEnable(GL_BLEND));
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
 	VertexArray vao;
-	VertexBuffer vbo(positions, 4 * 2 * sizeof(float));
+	VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
 	VertexLayout vl;
 	
+	vl.push<float>(2);
 	vl.push<float>(2);
 	vao.AddBuffer(vbo, vl);
 
 	IndexBuffer ibo(indices, 6);
 
+	glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+
 	Shader shader("Shaders/vertex.glsl", "Shaders/fragment.glsl");
 	shader.Bind();
-	shader.SetUniform4f("u_color", 0.4f, 0.5f, 0.7f, 1.0f);
+	shader.SetUniformMat4f("u_mvp", proj);
+
+	Texture texture("Resources/oglImage.png");
+	texture.Bind();
+	shader.SetUniform1i("u_texture", 0);
+
+	vao.UnBind();
+	vbo.UnBind();
+	ibo.UnBind();
+	shader.UnBind();
+	
 
 	while (!glfwWindowShouldClose(m_window)) {
 
@@ -90,7 +115,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	Application* app = new Application(640, 480, "Test App");
+	Application* app = new Application(960, 540, "Test App");
 
 	app->SetMonitorFromCurrent();
 	

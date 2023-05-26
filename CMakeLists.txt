@@ -16,6 +16,10 @@ add_subdirectory(Vendor/glad2)
 include_directories(Vendor/glad2/include)
 add_subdirectory(Vendor/GLFW)
 include_directories(Vendor/GLFW/include)
+add_subdirectory(Vendor/stb_image)
+include_directories(Vendor/stb_image)
+add_subdirectory(Vendor/glm)
+include_directories(Vendor/glm)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out)
 
