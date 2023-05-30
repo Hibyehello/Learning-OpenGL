@@ -15,12 +15,15 @@ add_executable(Core
 	VertexArray.h
 )
 
-target_include_directories(Core PUBLIC ${CMAKE_SOURCE_DIR}/Source/Core)
+target_include_directories(Core PUBLIC 
+	${CMAKE_SOURCE_DIR}/Source
+)
 
 target_link_libraries(Core PRIVATE
 	glad2
 	glfw
 	glm
 	stb_image
+	imgui
 	${OPENGL_LIBRARIES}
 )

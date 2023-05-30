@@ -9,7 +9,7 @@ Renderer::Renderer() {
 
 }
 
-void Renderer::onUpdate(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const {
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const {
 
 	shader.Bind();
 	va.Bind();
