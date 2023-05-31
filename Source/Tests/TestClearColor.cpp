@@ -25,4 +25,8 @@ void ClearColor::OnImGuiRender() {
 	ImGui::ColorEdit4("Clear Color", m_ClearColor);
 }
 
+std::string ClearColor::GetName() {
+	return "Clear Color";
+}
+
 }

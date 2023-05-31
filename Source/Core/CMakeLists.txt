@@ -20,6 +20,7 @@ target_include_directories(Core PUBLIC
 )
 
 target_link_libraries(Core PRIVATE
+	Tests
 	glad2
 	glfw
 	glm

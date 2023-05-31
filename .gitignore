@@ -1,2 +1,4 @@
 .DS_Store
 [Bb]uild/
+*~
+compile_commands.json
