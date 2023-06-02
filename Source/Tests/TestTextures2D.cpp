@@ -82,7 +82,7 @@ void Texture2D::OnImGuiRender() {
 }
 
 std::string Texture2D::GetName() {
-	return "Texture2D";
+	return "Texture 2D";
 }
 
 }

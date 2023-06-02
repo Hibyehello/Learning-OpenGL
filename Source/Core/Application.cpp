@@ -18,6 +18,7 @@
 #include <Core/VertexLayout.h>
 
 #include <Tests/TestClearColor.h>
+#include <Tests/TestColorCubes.h>
 #include <Tests/TestMenu.h>
 #include <Tests/TestTextures3D.h>
 #include <Tests/TestTextures2D.h>
@@ -70,6 +71,7 @@ int Application::Run() {
 	menu->RegisterTest<Test::ClearColor>();
 	menu->RegisterTest<Test::Texture2D>();
 	menu->RegisterTest<Test::Texture3D>();
+	menu->RegisterTest<Test::ColorCubes>();
 
 	while (!glfwWindowShouldClose(m_window)) {
 		GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));

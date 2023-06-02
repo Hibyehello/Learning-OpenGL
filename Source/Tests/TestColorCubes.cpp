@@ -1,4 +1,4 @@
-#include "TestTextures3D.h"
+#include "TestColorCubes.h"
 
 #include <Core/VertexLayout.h>
 #include <imgui.h>
@@ -6,9 +6,9 @@
 
 namespace Test {
 
-Texture3D::Texture3D()
+ColorCubes::ColorCubes()
 	: m_proj(glm::perspective(glm::radians(60.0f), 960.0f / 540.0f, 0.1f, 100.0f)), m_view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -3))), 
-	  m_translationA(0, 0, 0), m_translationB(-5, -5, -10) {
+	  m_translationA(0, 0, 0), m_translationB(-5, -5, -10), m_colorA{1.0f, 0.0f, 0.0f, 1.0f}, m_colorB{0.0f, 0.0f, 1.0f, 1.0f} {
 	float positions[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -79,27 +79,24 @@ Texture3D::Texture3D()
 	m_vao->AddBuffer(*m_vbo, vl);
 
 	m_ibo = std::make_unique<IndexBuffer>(indices, 36);
-	m_shader = std::make_unique<Shader>("Shaders/vertex.glsl", "Shaders/fragment.glsl");
+	m_shader = std::make_unique<Shader>("Shaders/vertex.glsl", "Shaders/fragmentColor.glsl");
 	m_shader->Bind();
 
-	m_texture = std::make_unique<Texture>("Resources/oglImage.png");
-	m_shader->SetUniform1i("u_texture", 0);
-	//m_shader->SetUniform4f("u_color", 0.5f, 0.5f, 0.5f, 1.0f);
+	//
 }
 
-Texture3D::~Texture3D() {
+ColorCubes::~ColorCubes() {
 }
 
-void Texture3D::OnUpdate(float deltaTime) {
+void ColorCubes::OnUpdate(float deltaTime) {
 }
 
-void Texture3D::OnRender() {
-	GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-	GLCall(glClear(GL_COLOR_BUFFER_BIT));
+void ColorCubes::OnRender() {
+	GLCall(glClearColor(m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3]));
+	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
 	Renderer renderer;
 
-	m_texture->Bind();
 
 	{
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translationA);
@@ -108,6 +105,7 @@ void Texture3D::OnRender() {
 		model = glm::rotate(model, glm::radians(m_rotA.z), glm::vec3(0.0f, 0.0f, 1.0f)); 
 		glm::mat4 mvp = m_proj * m_view * model;
 		m_shader->Bind();
+		m_shader->SetUniform4f("u_color", m_colorA[0], m_colorA[1], m_colorA[2], m_colorA[3]);
 		m_shader->SetUniformMat4f("u_mvp", mvp);
 
  		renderer.Draw(*m_vao, *m_ibo, *m_shader);
@@ -122,6 +120,7 @@ void Texture3D::OnRender() {
 		model = glm::rotate(model, glm::radians(m_rotB.z), glm::vec3(0.0f, 0.0f, 1.0f)); 
 		glm::mat4 mvp = m_proj * m_view * model;
 		m_shader->Bind();
+		m_shader->SetUniform4f("u_color", m_colorB[0], m_colorB[1], m_colorB[2], m_colorB[3]);
 		m_shader->SetUniformMat4f("u_mvp", mvp);
 
 		renderer.Draw(*m_vao, *m_ibo, *m_shader);
@@ -129,16 +128,19 @@ void Texture3D::OnRender() {
 
 }
 
-void Texture3D::OnImGuiRender() {
+void ColorCubes::OnImGuiRender() {
 	ImGui::SliderFloat3("Translation A", &m_translationA.x, -10.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 	ImGui::SliderFloat3("Rotation XZY A", &m_rotA.x, -180.0f, 180.0f);
 	ImGui::SliderFloat3("Translation B", &m_translationB.x, -10.0f, 10.0f);
     ImGui::SliderFloat3("Rotation XYZ B", &m_rotB.x, -180.0f, 180.0f);
+    ImGui::ColorEdit4("Cube Color A", m_colorA);
+    ImGui::ColorEdit4("Cube Color B", m_colorB);
+    ImGui::ColorEdit4("Clear Color", m_ClearColor);
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 }
 
-std::string Texture3D::GetName() {
-	return "Texture 3D";
+std::string ColorCubes::GetName() {
+	return "Color Cubes";
 }
 
 }
