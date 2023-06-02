@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Test.h"
-#include "TestClearColor.h"
 
 #include <vector>
 #include <functional>

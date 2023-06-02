@@ -19,7 +19,8 @@
 
 #include <Tests/TestClearColor.h>
 #include <Tests/TestMenu.h>
-#include <Tests/TestTextures.h>
+#include <Tests/TestTextures3D.h>
+#include <Tests/TestTextures2D.h>
 
 Application::Application(uint32_t width, uint32_t height, const char* title) {
 	this->m_width = width;
@@ -44,10 +45,12 @@ Application::Application(uint32_t width, uint32_t height, const char* title) {
 	}
 
 	this->m_renderer = new Renderer();
+	Renderer::PrintGLVersion();
 }
 
 int Application::Run() {
 	GLCall(glEnable(GL_BLEND));
+	glEnable(GL_DEPTH_TEST);  
 	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 	ImGui::CreateContext();
@@ -66,6 +69,7 @@ int Application::Run() {
 
 	menu->RegisterTest<Test::ClearColor>();
 	menu->RegisterTest<Test::Texture2D>();
+	menu->RegisterTest<Test::Texture3D>();
 
 	while (!glfwWindowShouldClose(m_window)) {
 		GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
