@@ -24,6 +24,16 @@
 #include <Tests/TestTextures2D.h>
 
 Application::Application(uint32_t width, uint32_t height, const char* title) {
+	if(!glfwInit()) {
+		std::cerr << "glfw failed to Init" << std::endl;
+		exit(-1);
+	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
 	this->m_width = width;
 	this->m_height = height;
 	this->m_title = title;
@@ -118,24 +128,4 @@ void Application::SetMonitor(GLFWmonitor* monitor) {
 
 void Application::SetMonitorFromCurrent() {
 	this->m_monitor = glfwGetWindowMonitor(m_window);
-}
-
-
-int main() {
-
-	if(!glfwInit()) {
-		std::cerr << "glfw failed to Init" << std::endl;
-		return -1;
-	}
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-	Application* app = new Application(960, 540, "Test App");
-
-	app->SetMonitorFromCurrent();
-	
-	return app->Run();
 }

@@ -1,4 +1,4 @@
-add_executable(Core 
+add_library(Core 
 	Application.cpp
 	Buffers.cpp
 	Error.cpp

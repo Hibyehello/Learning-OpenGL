@@ -1,4 +1,4 @@
 .DS_Store
-[Bb]uild/
+*[Bb]uild*/
 *~
 compile_commands.json
